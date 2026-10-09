@@ -1,0 +1,418 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Main\Memory">
+      <UniqueIdentifier>{6aa38dc6-5895-4dbe-9cdf-cac84d928f71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Network">
+      <UniqueIdentifier>{d9b38f9a-0cf6-4a6b-bc48-92513339cbac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\encryption">
+      <UniqueIdentifier>{e3c94d08-fc95-4852-866f-96854c418ad9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Engine">
+      <UniqueIdentifier>{5048876c-5fc1-462d-a1e2-95c3b6a486e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Engine\inc">
+      <UniqueIdentifier>{ef7ab713-5346-40c2-a074-cf04404302d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\encryption\CodeVM">
+      <UniqueIdentifier>{9411689a-80f1-42f7-b1b6-0f71bd5e6a3a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detections">
+      <UniqueIdentifier>{d2498fa5-6444-44df-90ec-170e0b1a0ee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detections\D3DChecks">
+      <UniqueIdentifier>{f7764c7f-3639-4fae-906c-6d9f00fa741a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detections\Kernal32Checks">
+      <UniqueIdentifier>{b11b4c76-ee21-47df-be09-4f7b6c971884}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detections\WeaponManager">
+      <UniqueIdentifier>{07e937fd-4254-4e30-b5b4-5abade720557}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Detections\Kernal32Checks\IsKernel32ModifiedDetected">
+      <UniqueIdentifier>{d1087163-9722-47c2-902f-51385b39af02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library">
+      <UniqueIdentifier>{9b14372e-5a66-4380-8dc6-bfa41d70adf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\detours">
+      <UniqueIdentifier>{b493d2b7-c309-4a89-8366-3e4780db7c14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Global">
+      <UniqueIdentifier>{a7a82294-6e9b-44de-afa5-ef641fabd2d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Global\inc">
+      <UniqueIdentifier>{989799cb-d6be-4aa9-a9c2-cad0431dca2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\Global\WeaponFeatures">
+      <UniqueIdentifier>{95923f3a-fa9c-4192-b53c-21848c7631a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Library\lithtech">
+      <UniqueIdentifier>{5bd74f49-0b95-41fc-8a2f-4f5671e99f29}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine.cpp">
+      <Filter>Main\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Main\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="SAC.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="IsD3D9HookDetected.cpp">
+      <Filter>Detections\D3DChecks</Filter>
+    </ClCompile>
+    <ClCompile Include="IsD3D9Hooked.cpp">
+      <Filter>Detections\D3DChecks</Filter>
+    </ClCompile>
+    <ClCompile Include="IsD3D9ModifiedDetected.cpp">
+      <Filter>Detections\D3DChecks</Filter>
+    </ClCompile>
+    <ClCompile Include="IsKernel32ModifiedDetected.cpp">
+      <Filter>Detections\Kernal32Checks\IsKernel32ModifiedDetected</Filter>
+    </ClCompile>
+    <ClCompile Include="IsKernel32ModifiedDetectedWin7.cpp">
+      <Filter>Detections\Kernal32Checks\IsKernel32ModifiedDetected</Filter>
+    </ClCompile>
+    <ClCompile Include="IsKernel32ModifiedDetectedWin7_2.cpp">
+      <Filter>Detections\Kernal32Checks\IsKernel32ModifiedDetected</Filter>
+    </ClCompile>
+    <ClCompile Include="ButeFilesModificationDeteceted.cpp">
+      <Filter>Detections\WeaponManager</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponButesCheckPattern.cpp">
+      <Filter>Detections\WeaponManager</Filter>
+    </ClCompile>
+    <ClCompile Include="AreClientErrorsBypassDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="BanBypassDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="BasicPlayerInfoDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="GlowHackDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsAntiShakeScreenDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsEngineHooksModified.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsInvisibleCharacterDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsNadeBypassDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsNoBugDamageDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsNzDBypassedDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsStringReloadEtcModified.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsStwDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="MtpPerfectRecoilDetection.cpp">
+      <Filter>Detections\WeaponManager</Filter>
+    </ClCompile>
+    <ClCompile Include="RemoteHookDetection.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="SendToServerDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="SuperKillDetected.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="WallhackDetect.cpp">
+      <Filter>Detections</Filter>
+    </ClCompile>
+    <ClCompile Include="IsExternalOverlayDetected.cpp">
+      <Filter>Detections\D3DChecks</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disasm.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disolarm.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disolarm64.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disolia64.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disolx64.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\disolx86.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\image.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\modules.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours\detours.cpp">
+      <Filter>Library\detours</Filter>
+    </ClCompile>
+    <ClCompile Include="ResulotionFix.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="VortexDecryption.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="ClientLimits.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="m200vip.cpp">
+      <Filter>Main\Global\WeaponFeatures</Filter>
+    </ClCompile>
+    <ClCompile Include="VortexHooks.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="LauncherLogin.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+    <ClCompile Include="VoiceChatSystem.cpp">
+      <Filter>Main\Global</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CRC.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="md6.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="modedhead.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Library</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryAddr.h">
+      <Filter>Main\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Offsets.h">
+      <Filter>Main\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Packets.h">
+      <Filter>Main\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorCodes.h">
+      <Filter>Main\Network</Filter>
+    </ClInclude>
+    <ClInclude Include="hidemodule.h">
+      <Filter>Main\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="xor.h">
+      <Filter>Main\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="xor2.h">
+      <Filter>Main\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="inject.h">
+      <Filter>Main\Engine\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="SAC.h">
+      <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_BorlandC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_GNU_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_ICL_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_LCC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_VC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_GNU_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_ICL_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_LCC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_VC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVM\VirtualizerSDK_BorlandC_inline.h">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </ClInclude>
+    <ClInclude Include="MM.h">
+      <Filter>Main\Engine\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours\detours.h">
+      <Filter>Library\detours</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours\detver.h">
+      <Filter>Library\detours</Filter>
+    </ClInclude>
+    <ClInclude Include="ResulotionFix.h">
+      <Filter>Main\Global\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="VortexDecryption.h">
+      <Filter>Main\Global\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="VortexHooks.h">
+      <Filter>Main\Global\inc</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltlink.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmath.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmatrix.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmatrix3x4.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmemorycategories.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmemutils.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltmodule.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltobb.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltplane.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltpolarcoord.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltrect.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltrotation.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltsphere.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltstlutils.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltstrutils.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\lttransform.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltvector.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\memblockallocator.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\platform.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\engine.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\idatabasemgr.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltcommon.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltinstream.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltmemory.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltmessage.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltoutstream.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\iltrefcount.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ilttimer.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltassert.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltbasedefs.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltbasetypes.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltbool.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltcodes.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltenum.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltguid.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\ltinteger.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\sys\win\versionutil.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\sys\win\winsync.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+    <ClInclude Include="LithTech\inc\sys\win\mpstrconv.h">
+      <Filter>Library\lithtech</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="CodeVM\VirtualizerSDK32.lib">
+      <Filter>Main\encryption\CodeVM</Filter>
+    </Library>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{bbbca213-cded-4516-be66-52e449826d34}</ProjectGuid>
+    <RootNamespace>CommSys</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>NewAC_Client</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>libGLESv3</TargetName>
+    <LibraryPath>$(DXSDK_DIR)Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;_WIN32_WINNT=0x0601;_HAS_STD_BYTE=0;_SILENCE_CXX17_OLD_ALLOCATOR_MEMBERS_DEPRECATION_WARNING;_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AreClientErrorsBypassDetected.cpp" />
+    <ClCompile Include="BanBypassDetected.cpp" />
+    <ClCompile Include="BasicPlayerInfoDetected.cpp" />
+    <ClCompile Include="ButeFilesModificationDeteceted.cpp" />
+    <ClCompile Include="ClientLimits.cpp" />
+    <ClCompile Include="Detours\detours.cpp" />
+    <ClCompile Include="Detours\disasm.cpp" />
+    <ClCompile Include="Detours\disolarm.cpp" />
+    <ClCompile Include="Detours\disolarm64.cpp" />
+    <ClCompile Include="Detours\disolia64.cpp" />
+    <ClCompile Include="Detours\disolx64.cpp" />
+    <ClCompile Include="Detours\disolx86.cpp" />
+    <ClCompile Include="Detours\image.cpp" />
+    <ClCompile Include="Detours\modules.cpp" />
+    <ClCompile Include="Engine.cpp" />
+    <ClCompile Include="IsExternalOverlayDetected.cpp" />
+    <ClCompile Include="GlowHackDetected.cpp" />
+    <ClCompile Include="IsAntiShakeScreenDetected.cpp" />
+    <ClCompile Include="IsD3D9HookDetected.cpp" />
+    <ClCompile Include="IsD3D9Hooked.cpp" />
+    <ClCompile Include="IsD3D9ModifiedDetected.cpp" />
+    <ClCompile Include="IsEngineHooksModified.cpp" />
+    <ClCompile Include="IsInvisibleCharacterDetected.cpp" />
+    <ClCompile Include="IsKernel32ModifiedDetected.cpp" />
+    <ClCompile Include="IsKernel32ModifiedDetectedWin7.cpp" />
+    <ClCompile Include="IsKernel32ModifiedDetectedWin7_2.cpp" />
+    <ClCompile Include="IsNadeBypassDetected.cpp" />
+    <ClCompile Include="IsNoBugDamageDetected.cpp" />
+    <ClCompile Include="IsNzDBypassedDetected.cpp" />
+    <ClCompile Include="IsStringReloadEtcModified.cpp" />
+    <ClCompile Include="IsStwDetected.cpp" />
+    <ClCompile Include="LauncherLogin.cpp" />
+    <ClCompile Include="m200vip.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MtpPerfectRecoilDetection.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="RemoteHookDetection.cpp" />
+    <ClCompile Include="ResulotionFix.cpp" />
+    <ClCompile Include="SAC.cpp" />
+    <ClCompile Include="SendToServerDetected.cpp" />
+    <ClCompile Include="SuperKillDetected.cpp" />
+    <ClCompile Include="VoiceChatSystem.cpp" />
+    <ClCompile Include="VortexDecryption.cpp" />
+    <ClCompile Include="VortexHooks.cpp" />
+    <ClCompile Include="WallhackDetect.cpp" />
+    <ClCompile Include="WeaponButesCheckPattern.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CodeVM\VirtualizerSDK.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_BorlandC_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_BorlandC_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_GNU_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_ICL_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_LCC_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_CustomVMs_VC_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_GNU_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_ICL_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_LCC_inline.h" />
+    <ClInclude Include="CodeVM\VirtualizerSDK_VC_inline.h" />
+    <ClInclude Include="CRC.h" />
+    <ClInclude Include="Detours\detours.h" />
+    <ClInclude Include="Detours\detver.h" />
+    <ClInclude Include="ErrorCodes.h" />
+    <ClInclude Include="hidemodule.h" />
+    <ClInclude Include="inject.h" />
+    <ClInclude Include="LithTech\inc\engine.h" />
+    <ClInclude Include="LithTech\inc\idatabasemgr.h" />
+    <ClInclude Include="LithTech\inc\iltcommon.h" />
+    <ClInclude Include="LithTech\inc\iltinstream.h" />
+    <ClInclude Include="LithTech\inc\iltmemory.h" />
+    <ClInclude Include="LithTech\inc\iltmessage.h" />
+    <ClInclude Include="LithTech\inc\iltoutstream.h" />
+    <ClInclude Include="LithTech\inc\iltrefcount.h" />
+    <ClInclude Include="LithTech\inc\ilttimer.h" />
+    <ClInclude Include="LithTech\inc\ltassert.h" />
+    <ClInclude Include="LithTech\inc\ltbasedefs.h" />
+    <ClInclude Include="LithTech\inc\ltbasetypes.h" />
+    <ClInclude Include="LithTech\inc\ltbool.h" />
+    <ClInclude Include="LithTech\inc\ltcodes.h" />
+    <ClInclude Include="LithTech\inc\ltenum.h" />
+    <ClInclude Include="LithTech\inc\ltguid.h" />
+    <ClInclude Include="LithTech\inc\ltinteger.h" />
+    <ClInclude Include="LithTech\inc\ltlink.h" />
+    <ClInclude Include="LithTech\inc\ltmath.h" />
+    <ClInclude Include="LithTech\inc\ltmatrix.h" />
+    <ClInclude Include="LithTech\inc\ltmatrix3x4.h" />
+    <ClInclude Include="LithTech\inc\ltmemorycategories.h" />
+    <ClInclude Include="LithTech\inc\ltmemutils.h" />
+    <ClInclude Include="LithTech\inc\ltmodule.h" />
+    <ClInclude Include="LithTech\inc\ltobb.h" />
+    <ClInclude Include="LithTech\inc\ltplane.h" />
+    <ClInclude Include="LithTech\inc\ltpolarcoord.h" />
+    <ClInclude Include="LithTech\inc\ltrect.h" />
+    <ClInclude Include="LithTech\inc\ltrotation.h" />
+    <ClInclude Include="LithTech\inc\ltsphere.h" />
+    <ClInclude Include="LithTech\inc\ltstlutils.h" />
+    <ClInclude Include="LithTech\inc\ltstrutils.h" />
+    <ClInclude Include="LithTech\inc\lttransform.h" />
+    <ClInclude Include="LithTech\inc\ltvector.h" />
+    <ClInclude Include="LithTech\inc\memblockallocator.h" />
+    <ClInclude Include="LithTech\inc\platform.h" />
+    <ClInclude Include="LithTech\inc\sys\win\mpstrconv.h" />
+    <ClInclude Include="LithTech\inc\sys\win\versionutil.h" />
+    <ClInclude Include="LithTech\inc\sys\win\winsync.h" />
+    <ClInclude Include="MM.h" />
+    <ClInclude Include="Packets.h" />
+    <ClInclude Include="md6.h" />
+    <ClInclude Include="MemoryAddr.h" />
+    <ClInclude Include="modedhead.h" />
+    <ClInclude Include="Offsets.h" />
+    <ClInclude Include="ResulotionFix.h" />
+    <ClInclude Include="SAC.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="VortexDecryption.h" />
+    <ClInclude Include="VortexHooks.h" />
+    <ClInclude Include="xor.h" />
+    <ClInclude Include="xor2.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="CodeVM\VirtualizerSDK32.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\Microsoft.Web.WebView2.1.0.3650.58\build\native\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.3650.58\build\native\Microsoft.Web.WebView2.targets')" />
+  </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Web.WebView2.1.0.3650.58\build\native\Microsoft.Web.WebView2.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Web.WebView2.1.0.3650.58\build\native\Microsoft.Web.WebView2.targets'))" />
+  </Target>
+</Project>
