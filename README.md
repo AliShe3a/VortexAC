@@ -64,5 +64,6 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 ![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_1.png)
 ![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_2.png)
 ![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_3.png)
+4.  **In-Game Detection:** ![In-Game](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image9.png)
 ## 💡 Technical Accomplishments
 Vortex Anti-Cheat showcases an advanced understanding of **Low-level Windows Internals**, **Security Architecture**, and **Network Programming**. By successfully implementing memory-level API hooking, custom cryptographic file streams, real-time client patching, and a hybrid TCP/UDP server architecture, this project not only neutralizes sophisticated game exploitation but also significantly enhances the underlying capabilities of a legacy game engine.
