@@ -40,6 +40,9 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 *   **Real-time Screen Capture:** Captures the player's screen (GDI+), compresses it to JPEG, fragments it into UDP chunks, and transmits it to the server for live admin monitoring.
 *   **Integrated VOIP:** Custom voice communication routing with channel separation (Global/Team) based on the current game room state.
 
+> **⚠️ Privacy & Ethical Compliance Note:**  
+> To effectively combat external cheats and unauthorized windowed overlays, the screen capture feature records the full desktop environment. This capability is strictly designed with ethical security practices in mind, operating solely for threat detection. It mandates explicit player consent via the server's Terms of Service (ToS) and Privacy Policy prior to initialization.
+
 ### 7. Embedded Web Server & Discord Gateway
 *   **C++ HTTP Web Server:** A lightweight, custom-built HTTP/TCP server embedded within the Anti-Cheat core to serve the Web Dashboard, REST APIs, and image assets.
 *   **Discord WebSocket Gateway:** Maintains a persistent WebSocket connection to Discord, streaming real-time alerts, player logs, and ban evidence directly to designated channels via rich embeds.
@@ -53,16 +56,24 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 
 ## 📷 System Preview
 
-1.  **Web Dashboard (Live Tracking):** ![Dashboard](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image4.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image3.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image6.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image7.png)
-2.  **Server Console:** ![Console](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image1.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image2.png)
-3.  **Discord Alerts:** ![Discord](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image10.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_1.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_2.png)
-![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_3.png)
-4.  **In-Game Detection:** ![In-Game](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image9.png)
+1.  **Web Dashboard (Live Tracking):**  
+    ![Dashboard](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image4.png)  
+    ![Dashboard 2](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image3.png)  
+    ![Dashboard 3](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image6.png)  
+    ![Dashboard 4](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image7.png)  
+
+2.  **Server Console:**  
+    ![Console](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image1.png)  
+    ![Console 2](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image2.png)  
+
+3.  **Discord Alerts:**  
+    ![Discord](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image10.png)  
+    ![Discord 2](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_1.png)  
+    ![Discord 3](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_2.png)  
+    ![Discord 4](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/Screenshot_3.png)  
+
+4.  **In-Game Detection:**  
+    ![In-Game](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image9.png)  
+
 ## 💡 Technical Accomplishments
 Vortex Anti-Cheat showcases an advanced understanding of **Low-level Windows Internals**, **Security Architecture**, and **Network Programming**. By successfully implementing memory-level API hooking, custom cryptographic file streams, real-time client patching, and a hybrid TCP/UDP server architecture, this project not only neutralizes sophisticated game exploitation but also significantly enhances the underlying capabilities of a legacy game engine.
