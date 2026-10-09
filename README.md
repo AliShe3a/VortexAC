@@ -54,8 +54,8 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 ## 📷 System Preview
 *(Add your screenshots here)*
 
-1.  **Web Dashboard (Live Tracking):** `![Dashboard](link-to-dashboard-image.png)`
-2.  **Server Console / Discord Alerts:** `![Console](link-to-console-image.png)`
+1.  **Web Dashboard (Live Tracking):** `![Dashboard](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image4.png)`
+2.  **Server Console / Discord Alerts:** `[!Console](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image1.png)`
 
 ## 💡 Technical Accomplishments
 Vortex Anti-Cheat showcases an advanced understanding of **Low-level Windows Internals**, **Security Architecture**, and **Network Programming**. By successfully implementing memory-level API hooking, custom cryptographic file streams, real-time client patching, and a hybrid TCP/UDP server architecture, this project not only neutralizes sophisticated game exploitation but also significantly enhances the underlying capabilities of a legacy game engine.
