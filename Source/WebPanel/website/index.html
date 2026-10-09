@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Anti-Cheat | Command Center</title>
+    <!-- Chart.js for Live Graph -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { --bg: #0b0c10; --panel: #15171e; --text: #e2e8f0; --cyan: #00e5ff; --red: #ff2a55; --green: #00ff88; --hover-bg: #1f222d; }
+        
+        /* 1. منع علامات تحديد النص من الموقع بالكامل لإعطاء إحساس التطبيقات */
+        body { 
+            margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); color: var(--text); overflow-x: hidden; 
+            -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;
+        }
+        /* استثناء حقول الإدخال عشان تقدر تكتب فيها وتحدد النص عادي */
+        input, select, textarea {
+            -webkit-user-select: auto; -moz-user-select: auto; -ms-user-select: auto; user-select: auto;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 2. تجميل وتغيير شكل الـ Scrollbar بالكامل */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #2a2e3d; border-radius: 4px; transition: background 0.3s; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+        
+        /* Animations */
+        @keyframes slideInUp { from { transform: translateY(15px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 5px var(--green); } 50% { box-shadow: 0 0 20px var(--green); } 100% { box-shadow: 0 0 5px var(--green); } }
+        @keyframes alertPulse { 0% { background-color: rgba(255, 42, 85, 0.1); } 50% { background-color: rgba(255, 42, 85, 0.3); } 100% { background-color: rgba(255, 42, 85, 0.1); } }
+        @keyframes radarSweep { 0% { top: -100px; } 100% { top: 100%; } }
+
+        /* Login Screen */
+        #login-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #15171e 0%, #0b0c10 100%); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .login-box { background: var(--panel); padding: 40px; border-radius: 12px; border-top: 4px solid var(--cyan); box-shadow: 0 15px 35px rgba(0,0,0,0.6); width: 90%; max-width: 320px; text-align: center; animation: slideInUp 0.6s ease-out; }
+        .login-box h2 { color: var(--cyan); margin-bottom: 25px; font-weight: 800; letter-spacing: 2px; }
+        input[type="text"], input[type="password"], input[type="number"], select { width: 90%; padding: 12px; margin: 10px 0; background: rgba(0,0,0,0.3); border: 1px solid #333; color: white; border-radius: 6px; outline: none; transition: 0.3s; }
+        input:focus, select:focus { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 255, 0.3); }
+        button { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--cyan); color: var(--cyan); cursor: pointer; transition: all 0.3s ease; font-weight: bold; border-radius: 6px; margin-top: 15px; letter-spacing: 1px; }
+        button:hover:not(:disabled) { background: var(--cyan); color: black; box-shadow: 0 0 15px rgba(0, 229, 255, 0.4); transform: translateY(-2px); }
+        button:disabled { cursor: not-allowed; opacity: 0.7; border-color: #555; color: #888; }
+
+        /* Main Dashboard */
+        #dashboard { padding: 20px; max-width: 1400px; margin: 0 auto; animation: fadeIn 0.8s ease-out; }
+        .header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2e3d; padding-bottom: 15px; margin-bottom: 20px; gap: 15px; }
+        .header h1 { color: var(--cyan); margin: 0; font-size: clamp(20px, 4vw, 28px); text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
+        
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .stat-card { background: linear-gradient(145deg, #1a1d24 0%, #15171e 100%); padding: 20px; border-radius: 10px; border-left: 4px solid #333; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: transform 0.3s; }
+        .stat-card:hover { transform: translateY(-3px); }
+        .stat-card.online { border-color: var(--green); }
+        .stat-card.banned { border-color: var(--red); }
+        .stat-card.admins { border-color: var(--cyan); }
+        .stat-card h3 { margin: 0; font-size: 12px; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-card p { margin: 10px 0 0; font-size: 30px; font-weight: 800; color: #fff; }
+
+        /* Chart Section */
+        .chart-container { background: #1a1d24; border: 1px solid #2a2e3d; border-radius: 8px; padding: 15px; margin-bottom: 25px; height: 200px; position: relative; }
+        
+        /* Tabs Logic */
+        .tabs-container { display: flex; overflow-x: auto; gap: 5px; margin-bottom: -1px; position: relative; z-index: 10; padding-bottom: 5px; scrollbar-width: none; }
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tab-btn { white-space: nowrap; width: auto; padding: 12px 20px; background: #15171e; border: 1px solid #2a2e3d; border-bottom: none; border-radius: 8px 8px 0 0; color: #888; margin: 0; transition: 0.3s; box-shadow: none; font-size: 14px; flex-shrink: 0; }
+        .tab-btn:hover { background: #1a1d24; color: #fff; transform: none; }
+        .tab-btn.active { background: #1a1d24; color: var(--cyan); border-color: var(--cyan); border-bottom: 2px solid #1a1d24; }
+        .tab-btn.active-red { color: var(--red); border-color: var(--red); border-bottom: 2px solid #1a1d24;}
+        .tab-btn.alert-state { animation: alertPulse 1.5s infinite; color: var(--red); border-color: var(--red); }
+
+        /* Table & Tools */
+        .tab-content { display: none; background: #1a1d24; border: 1px solid #2a2e3d; border-radius: 0 8px 8px 8px; padding: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); position: relative; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease-out; }
+        .tab-content.active-cyan-border { border-top: 1px solid var(--cyan); border-radius: 8px; }
+        .tab-content.active-red-border { border-top: 1px solid var(--red); border-radius: 8px; }
+        .tab-content.active-purple-border { border-top: 1px solid #a855f7; border-radius: 8px; }
+
+        .table-tools { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .search-input { width: 100%; max-width: 300px; padding: 10px 15px; background: rgba(0,0,0,0.3); border: 1px solid #333; border-radius: 6px; color: #fff; outline: none; transition: 0.3s; font-size: 13px; }
+        .search-input:focus { border-color: var(--cyan); box-shadow: 0 0 8px rgba(0, 229, 255, 0.2); }
+
+        .table-responsive { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #2a2e3d; font-size: 13px; white-space: nowrap; }
+        th { color: #94a3b8; text-transform: uppercase; font-size: 11px; letter-spacing: 1px; }
+        
+        tr.player-row { animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); transition: background 0.2s; }
+        tr.player-row:hover { background: var(--hover-bg); cursor: context-menu; }
+        tr.offline-row:hover { cursor: not-allowed; opacity: 0.7; }
+
+        /* Pagination Styles */
+        .pagination { display: flex; justify-content: center; gap: 8px; margin-top: 20px; flex-wrap: wrap; }
+        .page-btn { padding: 6px 14px; background: #15171e; border: 1px solid #2a2e3d; color: #888; border-radius: 4px; font-weight: bold; font-size: 13px; width: auto; margin: 0; transition: 0.2s; }
+        .page-btn:hover { background: #1f222d; color: #fff; }
+        .page-btn.active { background: var(--cyan); color: #000; border-color: var(--cyan); }
+        .page-dots { color: #555; align-self: center; font-weight: bold; }
+
+        .badge-offline { background:#334155; color:#fff; font-size:9px; padding:2px 6px; border-radius:4px; margin-left:8px; font-weight:bold; vertical-align:middle; letter-spacing:1px; }
+
+        /* Radar Sweep Effect */
+        .radar-box { position: relative; overflow: hidden; }
+        .radar-box::after {
+            content: ""; position: absolute; left: 0; width: 100%; height: 80px;
+            background: linear-gradient(to bottom, rgba(255,42,85,0) 0%, rgba(255,42,85,0.15) 50%, rgba(255,42,85,0) 100%);
+            border-bottom: 1px solid rgba(255,42,85,0.5);
+            animation: radarSweep 3s linear infinite; pointer-events: none; z-index: 5;
+        }
+
+        /* Server Status Tab */
+        .node-status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .node-card { background: #15171e; border: 1px solid #2a2e3d; border-radius: 8px; padding: 20px; }
+        .node-card h3 { color: #a855f7; margin-top: 0; font-size: 14px; border-bottom: 1px solid #2a2e3d; padding-bottom: 10px; }
+        .progress-bar { width: 100%; height: 8px; background: #2a2e3d; border-radius: 4px; margin-top: 10px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--cyan); width: 0%; transition: width 0.5s ease; }
+        .progress-fill.warning { background: #fbbf24; }
+        .progress-fill.danger { background: var(--red); }
+        .status-dot { display: inline-block; width: 8px; height: 8px; background: var(--green); border-radius: 50%; margin-right: 5px; box-shadow: 0 0 8px var(--green); }
+
+        /* Dynamic Score & Auth Colors */
+        .score-green { color: var(--green); font-weight: bold; text-shadow: 0 0 5px rgba(0, 255, 136, 0.3); }
+        .score-yellow { color: #fbbf24; font-weight: bold; text-shadow: 0 0 5px rgba(251, 191, 36, 0.3); }
+        .score-orange { color: #f97316; font-weight: bold; text-shadow: 0 0 5px rgba(249, 115, 22, 0.3); }
+        .score-red { color: var(--red); font-weight: bold; text-shadow: 0 0 5px rgba(255, 42, 85, 0.4); }
+        .auth-admin { color: var(--red); font-weight: bold; text-shadow: 0 0 5px rgba(255, 42, 85, 0.4); }
+        .auth-gm { color: #ff7eb3; font-weight: bold; text-shadow: 0 0 5px rgba(255, 126, 179, 0.4); }
+        .auth-normal { color: #94a3b8; }
+        .badge-detected { background: rgba(255, 42, 85, 0.15); color: var(--red); border: 1px solid var(--red); padding: 4px 10px; border-radius: 4px; font-weight: bold; letter-spacing: 1px; text-shadow: 0 0 5px rgba(255, 42, 85, 0.5); font-size: 11px; }
+
+        /* Context Menu */
+        #context-menu { position: absolute; background: rgba(21, 23, 30, 0.95); backdrop-filter: blur(10px); border: 1px solid var(--cyan); border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.6); z-index: 100; overflow: hidden; transform-origin: top left; animation: fadeIn 0.2s ease-out; min-width: 220px; }
+        .ctx-item { padding: 12px 20px; cursor: pointer; transition: 0.2s; font-size: 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #2a2e3d; }
+        .ctx-item:last-child { border-bottom: none; }
+        .ctx-item:hover { background: rgba(255,255,255,0.05); padding-left: 25px; }
+        .ctx-red { color: var(--red); }
+        .ctx-blue { color: var(--cyan); }
+        .ctx-green { color: var(--green); }
+
+        /* Modals & Toasts */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 200; padding: 20px; }
+        .modal-content { background: var(--panel); padding: 30px; border-radius: 12px; width: 100%; max-width: 450px; border-top: 4px solid var(--cyan); box-shadow: 0 15px 40px rgba(0,0,0,0.5); animation: slideInUp 0.4s ease-out;}
+        .modal-content.warning-top { border-top-color: var(--red); }
+        .modal-content.live-top { border-top-color: var(--green); }
+        .modal-content.settings-top { border-top-color: #f59e0b; }
+        
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+        .toast { background: var(--panel); border-left: 4px solid var(--cyan); color: white; padding: 15px 25px; border-radius: 6px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); font-weight: bold; animation: slideInRight 0.3s ease-out; min-width: 200px; font-size: 14px; }
+        .toast.error { border-left-color: var(--red); }
+        .toast.success { border-left-color: var(--green); }
+        @keyframes slideInRight { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fadeOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        /* Modified Stream Btn */
+        #floating-stream-btn { position: fixed; bottom: 30px; right: 30px; background: #1a1d24; border: 2px solid var(--green); color: var(--green); padding: 12px 20px; border-radius: 30px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.5); z-index: 999; display: none; animation: pulseGlow 2s infinite; align-items: center; gap: 10px; margin: 0; width: max-content; max-width: 90vw; white-space: nowrap; }
+        #floating-stream-btn:hover { background: var(--green); color: #000; }
+        
+        /* Loading Overlay */
+        #loading-overlay { position: fixed; inset: 0; background: rgba(11, 12, 16, 0.9); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .cyber-spinner { width: 50px; height: 50px; border: 3px solid transparent; border-top-color: var(--cyan); border-bottom-color: var(--cyan); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .settings-scroll { max-height: 60vh; overflow-y: auto; padding-right: 10px; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div id="toast-container"></div>
+    <div id="loading-overlay" class="hidden"><div class="cyber-spinner"></div><p style="margin-top:20px; color:var(--cyan); letter-spacing: 2px;">SYNCING COMMAND CENTER...</p></div>
+
+    <button id="floating-stream-btn" onclick="reopenStreamWindow()">
+        &#x1F4E1; <span id="fs-text">Active Stream</span>
+    </button>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>VORTEX LOGIN</h2>
+            <input type="password" id="adminPass" placeholder="Enter Secure Password" onkeypress="if(event.key === 'Enter') login()">
+            <button onclick="login()">AUTHORIZE</button>
+            <p id="login-error" style="color:var(--red); font-size:12px; display:none; margin-top:10px;">Access Denied!</p>
+        </div>
+    </div>
+
+    <div id="dashboard" class="hidden">
+        <div class="header">
+            <h1>VORTEX COMMAND CENTER</h1>
+            <div style="display:flex; gap:10px; flex-wrap: wrap;">
+                <button onclick="openSettings()" style="width:auto; padding:8px 15px; border-color:#f59e0b; color:#f59e0b;">&#x2699; System Config</button>
+                <button onclick="cleanMemory()" style="width:auto; padding:8px 15px; border-color:#a855f7; color:#a855f7;">&#x267B; Flush Engine</button>
+                <button onclick="logout()" style="width:auto; padding:8px 15px; border-color:var(--red); color:var(--red); display:flex; align-items:center; gap:5px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg> 
+                    Terminate
+                </button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card online"><h3>Online Players</h3><p id="st-online">0</p></div>
+            <div class="stat-card banned"><h3>Detected / Sus</h3><p id="st-detected">0</p></div>
+            <div class="stat-card admins"><h3>Admins Online</h3><p id="st-admins">0</p></div>
+            <div class="stat-card"><h3>Total Processed</h3><p id="st-total">0</p></div>
+        </div>
+
+        <!-- Live Heartbeat Chart -->
+        <div class="chart-container">
+            <canvas id="heartbeatChart"></canvas>
+        </div>
+
+        <div class="tabs-container">
+            <button id="btn-users" class="tab-btn active" onclick="switchTab('users')">&#x1F7E2; Live Network</button>
+            <button id="btn-dets" class="tab-btn" onclick="switchTab('dets')">&#x1F534; Detections Tracker</button>
+            <button id="btn-node" class="tab-btn" onclick="switchTab('node')">&#x2699; Server Node Status</button>
+        </div>
+
+        <!-- Tab: Users -->
+        <div id="tab-users" class="tab-content active active-cyan-border">
+            <div class="table-tools">
+                <input type="text" id="search-users" class="search-input" placeholder="Search by USN or IGN..." oninput="onSearchInput('users', this.value)">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>USN</th>
+                            <th>In-Game Name</th>
+                            <th>IP Address</th>
+                            <th>Score</th>
+                            <th>Authority</th>
+                        </tr>
+                    </thead>
+                    <tbody id="player-table"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pag-users"></div>
+            <div id="no-users-msg" style="text-align:center; padding: 30px; color:#888; display:none;">No players found.</div>
+        </div>
+
+        <!-- Tab: Detections -->
+        <div id="tab-dets" class="tab-content active-red-border radar-box">
+            <div class="table-tools">
+                <input type="text" id="search-dets" class="search-input" placeholder="Search suspicious USN or IGN..." oninput="onSearchInput('dets', this.value)">
+            </div>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>USN</th>
+                            <th>In-Game Name</th>
+                            <th>IP Address</th>
+                            <th>Status & Details</th>
+                            <th>Authority</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detection-table"></tbody>
+                </table>
+            </div>
+            <div class="pagination" id="pag-dets"></div>
+            <div id="no-dets-msg" style="text-align:center; padding: 30px; color:#888; display:none;">No suspicious activity detected.</div>
+        </div>
+
+        <!-- Server Node Tab -->
+        <div id="tab-node" class="tab-content active-purple-border">
+            <div class="node-status-grid">
+                <div class="node-card">
+                    <h3>&#x26A1; Core Processing (CPU)</h3>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:12px; color:#888;">
+                        <span>Vortex Engine Thread</span>
+                        <span id="cpu-text" style="color:var(--cyan); font-weight:bold;">12%</span>
+                    </div>
+                    <div class="progress-bar"><div id="cpu-bar" class="progress-fill" style="width:12%;"></div></div>
+                </div>
+                
+                <div class="node-card">
+                    <h3>&#x1F4BE; Memory Allocation (RAM)</h3>
+                    <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:12px; color:#888;">
+                        <span>Instance Usage</span>
+                        <span id="ram-text" style="color:var(--green); font-weight:bold;">145 MB</span>
+                    </div>
+                    <div class="progress-bar"><div id="ram-bar" class="progress-fill" style="width:25%;"></div></div>
+                </div>
+
+                <div class="node-card">
+                    <h3>&#x1F310; Network Listeners</h3>
+                    <div style="margin-top:15px; font-size:13px; line-height: 1.8;">
+                        <div><span class="status-dot"></span> TCP Main Port: <span style="color:#fff;">Active</span></div>
+                        <div><span class="status-dot"></span> UDP Stream Port: <span style="color:#fff;">Active</span></div>
+                        <div><span class="status-dot"></span> Web API Port: <span style="color:#fff;">Active</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div id="context-menu" class="hidden">
+        <div class="ctx-item ctx-green" onclick="openLiveShareModal()">&#x1F4E1; Start Live Share</div>
+        <div class="ctx-item ctx-blue" onclick="execAction('sc')">&#x1F4F8; Request Immediate SC</div>
+        <div class="ctx-item" onclick="execAction('kick')">&#x1F50C; Force Disconnect (Kick)</div>
+        <div class="ctx-item ctx-red" onclick="openBanModal()">&#x1F528; Ban With Reason</div>
+    </div>
+
+    <!-- Live Share Modal -->
+    <div id="live-share-modal" class="modal-overlay hidden">
+        <div class="modal-content live-top">
+            <h2 style="color:var(--green); margin-top:0;">&#x1F4E1; Initialize Live Share</h2>
+            <p style="color:#888; font-size:14px;">Establish a direct stream with the selected client.</p>
+            <label style="font-size:12px; color:#888;">Stream Resolution</label>
+            <select id="ls-res">
+                <option value="1920">1080p (High Quality)</option>
+                <option value="1280" selected>720p (Balanced)</option>
+                <option value="854">480p (Low Latency)</option>
+            </select>
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="startLiveShare()" style="border-color:var(--green); color:var(--green);">START STREAM</button>
+                <button onclick="closeModal('live-share-modal')" style="border-color:#555; color:#888;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ban Modal -->
+    <div id="ban-modal" class="modal-overlay hidden">
+        <div class="modal-content warning-top">
+            <h2 style="color:var(--red); margin-top:0;">Execute Ban</h2>
+            <input type="text" id="ban-reason" placeholder="e.g. Using Memory Editor">
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button onclick="confirmBan()" style="border-color:var(--red); color:var(--red);">Ban Player</button>
+                <button onclick="closeModal('ban-modal')" style="border-color:#555; color:#888;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content settings-top">
+            <h2 style="color:#f59e0b; margin-top:0;">&#x2699; System Configuration</h2>
+            <div class="settings-scroll">
+                <label style="font-size:12px; color:#888;">Discord Bot Token</label>
+                <input type="password" id="cfg-token" placeholder="Bot Token">
+                <label style="font-size:12px; color:#888;">Auth Channel ID</label>
+                <input type="text" id="cfg-auth" placeholder="Auth Channel">
+                <label style="font-size:12px; color:#888;">Ban Channel ID</label>
+                <input type="text" id="cfg-ban" placeholder="Ban Channel">
+                <label style="font-size:12px; color:#888;">Heartbeat Channel ID</label>
+                <input type="text" id="cfg-hb" placeholder="Heartbeat Channel">
+                <label style="font-size:12px; color:#888;">Server Binding IP</label>
+                <input type="text" id="cfg-ip" placeholder="127.0.0.1">
+                <label style="display:flex; align-items:center; gap:10px; margin-top:15px; color:#fff; font-size:14px;">
+                    <input type="checkbox" id="cfg-autoban" style="width:18px; height:18px; margin:0; cursor:pointer;">
+                    Enable Auto-Ban Engine (Score >= 100)
+                </label>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <button onclick="saveSettings()" style="border-color:#f59e0b; color:#f59e0b;">Save Configuration</button>
+                <button onclick="closeModal('settings-modal')" style="border-color:#555; color:#888;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let apiToken = localStorage.getItem("vtxToken") || "";
+        let selectedUSN = 0;
+        let updateTimer = null;
+        let currentTab = 'users';
+        let activeStreamUSN = null;
+        let streamWindow = null;
+        let streamCloseTimer = null; 
+        
+        // --- State Management for Pagination & Search ---
+        const ITEMS_PER_PAGE = 10; // الحد الأقصى للصفحة الواحدة
+        let dataState = {
+            users: { list: [], page: 1, search: "" },
+            dets: { list: [], page: 1, search: "" }
+        };
+
+        let heartbeatChart;
+        const chartConfig = {
+            type: 'line',
+            data: {
+                labels: Array(15).fill(''),
+                datasets: [
+                    { label: 'Online Network', data: Array(15).fill(0), borderColor: '#00e5ff', backgroundColor: 'rgba(0, 229, 255, 0.1)', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 },
+                    { label: 'Suspicious Activity', data: Array(15).fill(0), borderColor: '#ff2a55', backgroundColor: 'rgba(255, 42, 85, 0.1)', borderWidth: 2, fill: true, tension: 0.4, pointRadius: 0 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                plugins: { legend: { display: true, labels: { color: '#888', font: {size: 11} } } },
+                scales: {
+                    x: { display: false },
+                    y: { display: true, grid: { color: '#2a2e3d' }, ticks: { color: '#888', stepSize: 5 } }
+                },
+                animation: { duration: 400 }
+            }
+        };
+
+        window.addEventListener('message', function(event) {
+            if(event.data === 'STOP_STREAM') forceTerminateStreamUI();
+        });
+
+        window.addEventListener('beforeunload', () => {
+            if (activeStreamUSN !== null) {
+                navigator.sendBeacon('/api/action', JSON.stringify({ token: apiToken, usn: parseInt(activeStreamUSN), action: 'live_cmd', reason: 'stop' }));
+            }
+        });
+
+        if (apiToken) showDashboard();
+
+        function showToast(msg, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOutRight 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function login() {
+            let pass = document.getElementById("adminPass").value;
+            fetch('/api/login', { method: 'POST', body: pass })
+                .then(r => r.text())
+                .then(res => {
+                    if (res.startsWith("OK:")) {
+                        apiToken = res.split(":")[1];
+                        localStorage.setItem("vtxToken", apiToken);
+                        document.getElementById("login-error").style.display = "none";
+                        showDashboard();
+                    } else {
+                        document.getElementById("login-error").style.display = "block";
+                    }
+                }).catch(() => showToast("Failed to connect to server.", "error"));
+        }
+
+        function logout() {
+            localStorage.removeItem("vtxToken");
+            apiToken = "";
+            document.getElementById("dashboard").classList.add("hidden");
+            document.getElementById("login-screen").classList.remove("hidden");
+            clearInterval(updateTimer);
+            if(heartbeatChart) heartbeatChart.destroy();
+        }
+
+        function showDashboard() {
+            document.getElementById("login-screen").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            
+            const ctx = document.getElementById('heartbeatChart').getContext('2d');
+            if(heartbeatChart) heartbeatChart.destroy();
+            heartbeatChart = new Chart(ctx, chartConfig);
+
+            fetchData();
+            updateTimer = setInterval(fetchData, 3000);
+        }
+
+        function switchTab(tabId) {
+            currentTab = tabId;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'active-red', 'active-purple'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            let btn = document.getElementById('btn-' + tabId);
+            if(tabId === 'users') btn.classList.add('active');
+            else if(tabId === 'dets') btn.classList.add('active-red');
+            else btn.classList.add('active-purple', 'active'); 
+
+            document.getElementById('tab-' + tabId).classList.add('active');
+            btn.classList.remove('alert-state'); 
+        }
+
+        function updateChart(online, dets) {
+            if(!heartbeatChart) return;
+            const data = heartbeatChart.data;
+            data.datasets[0].data.push(online);
+            data.datasets[0].data.shift();
+            data.datasets[1].data.push(dets);
+            data.datasets[1].data.shift();
+            heartbeatChart.update('none'); 
+        }
+
+        let simCpu = 12, simRam = 145;
+        function updateNodeStats() {
+            simCpu = Math.max(5, Math.min(100, simCpu + (Math.random() * 10 - 5)));
+            simRam = Math.max(100, Math.min(2048, simRam + (Math.random() * 20 - 10)));
+            
+            let cBar = document.getElementById('cpu-bar');
+            cBar.style.width = `${simCpu}%`;
+            cBar.className = `progress-fill ${simCpu > 80 ? 'danger' : (simCpu > 50 ? 'warning' : '')}`;
+            document.getElementById('cpu-text').innerText = `${simCpu.toFixed(1)}%`;
+
+            let rBar = document.getElementById('ram-bar');
+            let rPercent = (simRam / 2048) * 100;
+            rBar.style.width = `${rPercent}%`;
+            rBar.className = `progress-fill ${rPercent > 80 ? 'danger' : ''}`;
+            document.getElementById('ram-text').innerText = `${simRam.toFixed(0)} MB`;
+        }
+
+        function cleanMemory() {
+            const overlay = document.getElementById('loading-overlay');
+            overlay.classList.remove('hidden');
+            
+            fetch('/api/action', { method: 'POST', body: JSON.stringify({ token: apiToken, usn: 0, action: 'clean_mem', reason: 'Admin Request' }) })
+            .then(() => {
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    simCpu = 5; simRam = 80; 
+                    updateNodeStats();
+                    showToast("Engine memory flushed and garbage collected successfully.", "success");
+                    fetchData(); 
+                }, 1000); 
+            }).catch(()=> overlay.classList.add('hidden'));
+        }
+
+        function openSettings() {
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            fetch('/api/settings?token=' + apiToken)
+            .then(r => r.json())
+            .then(data => {
+                document.getElementById('cfg-token').value = data.customToken || '';
+                document.getElementById('cfg-auth').value = data.authCh || '';
+                document.getElementById('cfg-ban').value = data.banCh || '';
+                document.getElementById('cfg-hb').value = data.hbCh || '';
+                document.getElementById('cfg-ip').value = data.serverIp || '';
+                document.getElementById('cfg-autoban').checked = data.autoBan === true;
+                
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('settings-modal').classList.remove('hidden');
+            }).catch(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                showToast("Failed to fetch config from server", "error");
+            });
+        }
+
+        function saveSettings() {
+            const payload = {
+                token: apiToken,
+                customToken: document.getElementById('cfg-token').value,
+                authCh: document.getElementById('cfg-auth').value,
+                banCh: document.getElementById('cfg-ban').value,
+                hbCh: document.getElementById('cfg-hb').value,
+                serverIp: document.getElementById('cfg-ip').value,
+                autoBan: document.getElementById('cfg-autoban').checked ? "true" : "false"
+            };
+            
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            fetch('/api/settings', { method: 'POST', body: JSON.stringify(payload) })
+            .then(r => r.json())
+            .then(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                closeModal('settings-modal');
+                showToast("Configuration saved securely. Engine updated.", "success");
+            }).catch(() => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                showToast("Failed to save configuration", "error");
+            });
+        }
+
+        // ==========================================
+        // Pagination & Search Render Logic
+        // ==========================================
+        function onSearchInput(type, val) {
+            dataState[type].search = val.toLowerCase().trim();
+            dataState[type].page = 1; // Reset page to 1 when searching
+            renderTableState(type);
+        }
+
+        function changePage(type, newPage) {
+            dataState[type].page = newPage;
+            renderTableState(type);
+        }
+
+        function renderTableState(type) {
+            let tbodyId = type === 'users' ? 'player-table' : 'detection-table';
+            let pagId = type === 'users' ? 'pag-users' : 'pag-dets';
+            let msgId = type === 'users' ? 'no-users-msg' : 'no-dets-msg';
+
+            let state = dataState[type];
+            
+            // 1. Filter by Search Query (USN or IGN)
+            let filteredList = state.list.filter(p => {
+                if(!state.search) return true;
+                return p.usn.toString().includes(state.search) || 
+                       (p.ign && p.ign.toLowerCase().includes(state.search));
+            });
+
+            // 2. Pagination Math
+            let totalPages = Math.ceil(filteredList.length / ITEMS_PER_PAGE) || 1;
+            if (state.page > totalPages) state.page = totalPages;
+
+            let startIndex = (state.page - 1) * ITEMS_PER_PAGE;
+            let currentSlice = filteredList.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+            // 3. Update DOM
+            updateTableUI(tbodyId, currentSlice);
+            renderPagination(pagId, type, state.page, totalPages);
+
+            document.getElementById(msgId).style.display = filteredList.length === 0 ? "block" : "none";
+        }
+
+        function renderPagination(pagId, type, currentPage, totalPages) {
+            let container = document.getElementById(pagId);
+            container.innerHTML = '';
+            
+            if (totalPages <= 1) return; // لا تظهر الأرقام إذا كانت صفحة واحدة
+
+            // حساب الزراير المطلوبة (علشان ميبقاش شكلهم وحش لو في 50 صفحة)
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+
+            if (startPage > 1) {
+                container.innerHTML += `<button class="page-btn" onclick="changePage('${type}', 1)">1</button>`;
+                if (startPage > 2) container.innerHTML += `<span class="page-dots">...</span>`;
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                container.innerHTML += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="changePage('${type}', ${i})">${i}</button>`;
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) container.innerHTML += `<span class="page-dots">...</span>`;
+                container.innerHTML += `<button class="page-btn" onclick="changePage('${type}', ${totalPages})">${totalPages}</button>`;
+            }
+        }
+
+        function updateTableUI(tbodyId, playersList) {
+            let tbody = document.getElementById(tbodyId);
+            let isDetections = (tbodyId === "detection-table");
+            let existingRows = Array.from(tbody.querySelectorAll('tr'));
+            let newUsns = playersList.map(p => p.usn.toString());
+
+            // إزالة الصفوف القديمة أو اللي مش في الصفحة الحالية
+            existingRows.forEach(tr => { if (!newUsns.includes(tr.dataset.usn)) tbody.removeChild(tr); });
+
+            playersList.forEach((p) => {
+                let tr = tbody.querySelector(`tr[data-usn="${p.usn}"]`);
+                let isNew = false;
+                if (!tr) { tr = document.createElement("tr"); tr.dataset.usn = p.usn.toString(); tr.className = "player-row"; isNew = true; }
+
+                let isOffline = !p.isOnline;
+                if (isOffline) tr.classList.add("offline-row"); else tr.classList.remove("offline-row");
+                if (!isOffline) tr.oncontextmenu = (e) => showContext(e, p.usn); else tr.oncontextmenu = (e) => e.preventDefault();
+
+                let scoreClass = "score-green";
+                if (p.score >= 20 && p.score <= 50) scoreClass = "score-yellow";
+                else if (p.score > 50 && p.score <= 80) scoreClass = "score-orange";
+                else if (p.score > 80) scoreClass = "score-red";
+
+                let scoreHTML = `<span class="${scoreClass}">${p.score}</span>`;
+                let statusColHTML = scoreHTML; 
+                
+                if (isDetections) {
+                    let actText = p.actionStatus || "DETECTED";
+                    let reasonText = p.errorInfo && p.errorInfo.trim() !== "" ? p.errorInfo : "Suspicious Activity / High Score";
+                    statusColHTML = `
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="badge-detected">${actText}</span> 
+                            <span style="font-size:11px; color:#888;">(Score: ${scoreHTML})</span>
+                        </div>
+                        <div style="font-size:11px; color:#b0b8c4; margin-top:4px; white-space:normal; max-width: 300px;">&#x25B8; ${reasonText}</div>
+                    `;
+                }
+
+                let authClass = "auth-normal";
+                let authStr = p.auth ? p.auth.toUpperCase() : "NORMAL PLAYER";
+                if (authStr.includes("ADMIN")) authClass = "auth-admin";
+                else if (authStr.includes("GAMEMASTER") || authStr.includes("GM")) authClass = "auth-gm";
+                let authHTML = `<span class="${authClass}">${p.auth}</span>`;
+
+                tr.innerHTML = `
+                    <td>#${p.usn}</td>
+                    <td>${p.ign} ${isOffline ? '<span class="badge-offline">OFFLINE</span>' : ''}</td>
+                    <td>${p.ip}</td>
+                    <td>${statusColHTML}</td>
+                    <td>${authHTML}</td>
+                `;
+                if (isNew) tbody.appendChild(tr);
+            });
+        }
+
+        let lastDetCount = 0;
+        function fetchData() {
+            fetch('/api/data?token=' + apiToken)
+            .then(r => { if(r.status === 401) logout(); return r.json(); })
+            .then(data => {
+                document.getElementById("st-online").innerText = data.stats.online;
+                document.getElementById("st-admins").innerText = data.stats.admins;
+                document.getElementById("st-total").innerText = data.stats.total;
+
+                let usersList = [], detsList = [];
+
+                data.players.forEach(p => {
+                    if (p.isOnline) usersList.push(p);
+                    if (p.isDetected || p.score >= 50 || !p.isOnline) detsList.push(p);
+                });
+
+                // Update the state arrays
+                dataState.users.list = usersList;
+                dataState.dets.list = detsList;
+
+                // Re-render current page/search slices
+                renderTableState('users');
+                renderTableState('dets');
+                
+                document.getElementById("st-detected").innerText = detsList.length;
+                updateChart(usersList.length, detsList.length);
+                updateNodeStats(); 
+
+                // Visual Alert for new detections
+                if(detsList.length > lastDetCount && currentTab !== 'dets') {
+                    document.getElementById('btn-dets').classList.add('alert-state');
+                }
+                lastDetCount = detsList.length;
+
+            }).catch(e => console.log(e));
+        }
+
+        setInterval(() => {
+            if (activeStreamUSN !== null) {
+                if (!streamWindow || streamWindow.closed) {
+                    if (!streamCloseTimer) {
+                        console.log("[Vortex] Stream window closed. Starting 30s countdown to kill session...");
+                        streamCloseTimer = setTimeout(() => {
+                            fetch('/api/action', { method: 'POST', body: JSON.stringify({ token: apiToken, usn: parseInt(activeStreamUSN), action: 'live_cmd', reason: 'stop' }) })
+                            .then(() => { 
+                                showToast("Stream auto-terminated (Inactive for 30s).", "info"); 
+                                forceTerminateStreamUI(); 
+                            });
+                        }, 30000); 
+                    }
+                } else {
+                    if (streamCloseTimer) {
+                        clearTimeout(streamCloseTimer);
+                        streamCloseTimer = null;
+                    }
+                }
+            }
+        }, 1000);
+
+        const ctxMenu = document.getElementById("context-menu");
+        function showContext(e, usn) {
+            e.preventDefault();
+            selectedUSN = usn;
+            
+            let x = e.pageX, y = e.pageY;
+            if(x + 220 > window.innerWidth) x = window.innerWidth - 230;
+            
+            ctxMenu.style.top = y + "px"; ctxMenu.style.left = x + "px";
+            ctxMenu.classList.remove("hidden");
+        }
+        document.addEventListener("click", () => ctxMenu.classList.add("hidden"));
+
+        function closeModal(modalId) { document.getElementById(modalId).classList.add("hidden"); }
+
+        function execAction(act) {
+            fetch('/api/action', { method: 'POST', body: JSON.stringify({ token: apiToken, usn: parseInt(selectedUSN), action: act, reason: "Admin Action" }) })
+            .then(() => { showToast(`Command Sent.`, "success"); fetchData(); });
+        }
+
+        function openBanModal() { document.getElementById("ban-modal").classList.remove("hidden"); }
+        function confirmBan() {
+            let reason = document.getElementById("ban-reason").value;
+            fetch('/api/action', { method: 'POST', body: JSON.stringify({ token: apiToken, usn: parseInt(selectedUSN), action: 'ban', reason: reason }) })
+            .then(() => { closeModal('ban-modal'); fetchData(); });
+        }
+
+        function openLiveShareModal() {
+            if (activeStreamUSN !== null) { showToast("Stream already active!", "error"); return; }
+            document.getElementById("live-share-modal").classList.remove("hidden");
+        }
+
+        function startLiveShare() {
+            let res = document.getElementById("ls-res").value;
+            fetch('/api/action', { method: 'POST', body: JSON.stringify({ token: apiToken, usn: parseInt(selectedUSN), action: 'live_cmd', reason: 'start', quality: res }) })
+            .then(() => {
+                closeModal('live-share-modal'); activeStreamUSN = selectedUSN;
+                document.getElementById('floating-stream-btn').style.display = "flex";
+                document.getElementById('fs-text').innerText = `Active Stream (#${activeStreamUSN})`;
+                openStreamWindow();
+            });
+        }
+
+        function openStreamWindow() {
+            if (streamCloseTimer) {
+                clearTimeout(streamCloseTimer);
+                streamCloseTimer = null;
+            }
+            let url = `/stream.html?usn=${activeStreamUSN}&token=${apiToken}`;
+            streamWindow = window.open(url, `LiveShare_${activeStreamUSN}`, 'width=1000,height=650');
+        }
+
+        function reopenStreamWindow() { if(activeStreamUSN !== null) openStreamWindow(); }
+
+        function forceTerminateStreamUI() {
+            if (streamWindow && !streamWindow.closed) streamWindow.postMessage('DISCONNECTED_BY_SERVER', '*'); 
+            if (streamCloseTimer) { clearTimeout(streamCloseTimer); streamCloseTimer = null; }
+            activeStreamUSN = null;
+            document.getElementById('floating-stream-btn').style.display = "none";
+        }
+    </script>
+</body>
+</html>

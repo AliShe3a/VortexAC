@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vortex Live Share - Viewer</title>
+    <style>
+        body { margin: 0; padding: 0; background: #0b0c10; color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+        .toolbar { background: #15171e; padding: 15px 20px; border-bottom: 2px solid #00e5ff; display: flex; justify-content: space-between; align-items: center; }
+        .toolbar h2 { margin: 0; font-size: 18px; color: #00e5ff; letter-spacing: 1px; }
+        .controls { display: flex; gap: 15px; align-items: center; }
+        .status { font-size: 14px; color: #f59e0b; display: flex; align-items: center; gap: 8px; font-weight: bold;}
+        .status.connected { color: #00ff88; }
+        .status.disconnected { color: #ff2a55; }
+        .pulse { width: 10px; height: 10px; background: currentColor; border-radius: 50%; box-shadow: 0 0 8px currentColor; animation: fade 1.5s infinite; }
+        @keyframes fade { 0% {opacity:0.4;} 50% {opacity:1;} 100% {opacity:0.4;} }
+        button { padding: 8px 15px; background: transparent; border: 1px solid #ff2a55; color: #ff2a55; cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.2s; }
+        button:hover { background: #ff2a55; color: #000; box-shadow: 0 0 10px rgba(255,42,85,0.5); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        .stream-container { flex: 1; display: flex; justify-content: center; align-items: center; background: #000; position: relative; }
+        
+        /* شلنا الفلتر اللي كان بيعمل Blur للصورة عشان تفضل حادة 100% */
+        #stream-image { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+            display: none; 
+        }
+        
+        .loader { text-align: center; color: #888; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #1a1d24; border-top-color: #00e5ff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #lost-msg { display: none; color: #ff2a55; font-size: 24px; font-weight: bold; text-align: center; }
+        #timeout-msg { display: none; color: #ff2a55; font-size: 20px; font-weight: bold; text-align: center; margin-top: 10px;}
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <h2>VORTEX LIVE <span id="usn-title" style="color:#888; font-size:14px;"></span></h2>
+        <div class="controls">
+            <div id="status-indicator" class="status"><div class="pulse"></div> <span id="status-text">Connecting...</span></div>
+            <button id="close-btn" onclick="terminateStream()">CLOSE CONNECTION</button>
+        </div>
+    </div>
+    <div class="stream-container">
+        <div id="loader" class="loader">
+            <div class="spinner" id="spin-anim"></div>
+            <p id="loader-txt">Waiting for client frames...</p>
+            <p id="timeout-msg">Connection Failed (Timeout)</p>
+        </div>
+        <div id="lost-msg">&#x26A0; CONNECTION LOST OR ENDED</div>
+        <img id="stream-image" src="" alt="Live Stream">
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const usn = urlParams.get('usn');
+        const token = urlParams.get('token');
+        
+        let isConnected = false;
+        let isDead = false;
+        let currentBlobUrl = null;
+        
+        const startTime = Date.now();
+        const INITIAL_TIMEOUT_MS = 30000; 
+        const BUFFER_TIMEOUT_MS = 10000;  
+        let lastFrameTime = Date.now();
+
+        if (!usn || !token) {
+            document.getElementById('status-text').innerText = "Invalid Session";
+            document.getElementById('status-indicator').className = "status disconnected";
+            document.getElementById('loader-txt').innerText = "Session parameters missing.";
+            document.getElementById('spin-anim').style.display = 'none';
+        } else {
+            document.getElementById('usn-title').innerText = `(USN #${usn})`;
+            startStreamEngine(); 
+        }
+
+        window.addEventListener('message', function(event) {
+            if(event.data === 'DISCONNECTED_BY_SERVER') {
+                showDisconnectedState();
+            }
+        });
+
+        async function startStreamEngine() {
+            const img = document.getElementById('stream-image');
+            const loader = document.getElementById('loader');
+            const loaderTxt = document.getElementById('loader-txt');
+            const timeoutMsg = document.getElementById('timeout-msg');
+            const statusText = document.getElementById('status-text');
+            const statusInd = document.getElementById('status-indicator');
+            const spinAnim = document.getElementById('spin-anim');
+
+            console.log(`[Vortex Stream] Initiating connection for USN: ${usn}`);
+
+            while (!isDead) {
+                const now = Date.now();
+                
+                if (!isConnected && (now - startTime > INITIAL_TIMEOUT_MS)) {
+                    isDead = true;
+                    spinAnim.style.display = 'none';
+                    loaderTxt.style.display = 'none';
+                    timeoutMsg.style.display = 'block';
+                    statusText.innerText = "FAILED";
+                    statusInd.className = "status disconnected";
+                    break;
+                }
+
+                if (isConnected && (now - lastFrameTime > BUFFER_TIMEOUT_MS)) {
+                    showDisconnectedState();
+                    break;
+                }
+
+                const ts = new Date().getTime();
+                const frameUrl = `/api/stream?token=${token}&usn=${usn}&t=${ts}`;
+                
+                try {
+                    const response = await fetch(frameUrl);
+                    
+                    if (response.status === 200) {
+                        const blob = await response.blob();
+                        const newObjUrl = URL.createObjectURL(blob);
+                        
+                        // استخدام requestAnimationFrame بيدي أنعم فريم ريت ممكن مع الشاشة (60/30fps)
+                        img.onload = () => {
+                            if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+                            currentBlobUrl = newObjUrl;
+                        };
+                        
+                        img.src = newObjUrl;
+                        lastFrameTime = Date.now(); 
+
+                        if (!isConnected) {
+                            isConnected = true;
+                            loader.style.display = 'none';
+                            img.style.display = 'block';
+                            statusText.innerText = "LIVE";
+                            statusInd.className = "status connected";
+                        }
+                        
+                        // قللنا الانتظار هنا من 40 لـ 10 مللي ثانية عشان منخنقش الفريمات ونوصل لـ 30-60 براحتنا
+                        await new Promise(r => setTimeout(r, 10)); 
+                        
+                    } else if (response.status === 404) {
+                        if (!isConnected) {
+                            let timeLeft = Math.ceil((INITIAL_TIMEOUT_MS - (now - startTime)) / 1000);
+                            loaderTxt.innerText = `Waiting for client frames... (${timeLeft}s)`;
+                            statusText.innerText = "Connecting...";
+                        } else {
+                            statusText.innerText = "Buffering...";
+                            statusInd.className = "status";
+                        }
+                        
+                        await new Promise(r => setTimeout(r, 100)); 
+                    } else {
+                        await new Promise(r => setTimeout(r, 200));
+                    }
+                } catch (e) {
+                    await new Promise(r => setTimeout(r, 200)); 
+                }
+            }
+        }
+
+        function showDisconnectedState() {
+            if(isDead) return;
+            isDead = true;
+            isConnected = false;
+            
+            document.getElementById('stream-image').style.display = 'none';
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('lost-msg').style.display = 'block';
+            
+            document.getElementById('status-text').innerText = "CONNECTION LOST";
+            document.getElementById('status-indicator').className = "status disconnected";
+            
+            if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
+        }
+
+        function terminateStream() {
+            isDead = true; 
+            document.getElementById('status-text').innerText = "Stopping...";
+            
+            const btn = document.getElementById('close-btn');
+            if (btn) btn.disabled = true;
+            
+            fetch('/api/action', {
+                method: 'POST',
+                body: JSON.stringify({ token: token, usn: parseInt(usn), action: 'live_cmd', reason: 'stop' })
+            }).then(() => {
+                if (window.opener && !window.opener.closed) window.opener.postMessage('STOP_STREAM', '*');
+                window.close(); 
+                document.body.innerHTML = "<h2 style='color:#888; text-align:center; margin-top:20%;'>Stream Ended. You can safely close this window.</h2>";
+            }).catch(() => {
+                if (window.opener && !window.opener.closed) window.opener.postMessage('STOP_STREAM', '*');
+                window.close();
+                document.body.innerHTML = "<h2 style='color:#888; text-align:center; margin-top:20%;'>Stream Ended. You can safely close this window.</h2>";
+            });
+        }
+    </script>
+</body>
+</html>

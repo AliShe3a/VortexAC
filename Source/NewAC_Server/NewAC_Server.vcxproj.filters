@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Main">
+      <UniqueIdentifier>{66045b43-844e-4895-8821-78bff36f0329}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\encryption">
+      <UniqueIdentifier>{35405247-ae17-400c-a227-20fc9f10496e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\network">
+      <UniqueIdentifier>{f15a9959-49ab-49ab-8962-c9fa86c7cbcd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\system">
+      <UniqueIdentifier>{dca0967d-ffb1-416d-b1fc-ebcd724d1362}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\system\headers">
+      <UniqueIdentifier>{af2000e9-a609-40b0-9aca-69a7ac8404c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\system\wrapper">
+      <UniqueIdentifier>{8fea356f-0c92-488a-be5e-06a688cbf66e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\resouces">
+      <UniqueIdentifier>{eb809e8a-ea72-4cef-b2b4-a97612974d74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main\commons">
+      <UniqueIdentifier>{f93bc600-89d2-4e7b-9eee-8dc98364719a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="AntiCheat.cpp">
+      <Filter>Main\system</Filter>
+    </ClCompile>
+    <ClCompile Include="DatabaseManager.cpp">
+      <Filter>Main\system</Filter>
+    </ClCompile>
+    <ClCompile Include="DiscordManager.cpp">
+      <Filter>Main\system</Filter>
+    </ClCompile>
+    <ClCompile Include="AnticheatWebServer.cpp">
+      <Filter>Main\system</Filter>
+    </ClCompile>
+    <ClCompile Include="wrapper.cpp">
+      <Filter>Main\system\wrapper</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="defines.h">
+      <Filter>Main\commons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NewAC_Client\Packets.h">
+      <Filter>Main\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NewAC_Client\ErrorCodes.h">
+      <Filter>Main\network</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NewAC_Client\xor.h">
+      <Filter>Main\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NewAC_Client\xor2.h">
+      <Filter>Main\encryption</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerInfo.h">
+      <Filter>Main\system\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AntiCheat.h">
+      <Filter>Main\system\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CRC.h">
+      <Filter>Main\commons</Filter>
+    </ClInclude>
+    <ClInclude Include="DatabaseManager.h">
+      <Filter>Main\system\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="DiscordManager.h">
+      <Filter>Main\system\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="AnticheatWebServer.h">
+      <Filter>Main\system\headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Main\resouces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="NewAC_Server.rc">
+      <Filter>Main\resouces</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="L:\CrossFire.ico">
+      <Filter>Main\resouces</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
