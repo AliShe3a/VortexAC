@@ -52,7 +52,6 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 *   **Security & Modding:** Memory patching, Reverse Engineering countermeasures, CRC32 Integrity, Custom XOR Encryption, PE Header Parsing.
 
 ## 📷 System Preview
-*(Add your screenshots here)*
 
 1.  **Web Dashboard (Live Tracking):** ![Dashboard](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image4.png)
 ![](https://github.com/AliShe3a/VortexAC/blob/main/Screenshots/image3.png)
