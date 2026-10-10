@@ -77,3 +77,19 @@ Built a custom UDP-based networking protocol to monitor suspected players and fa
 
 ## 💡 Technical Accomplishments
 Vortex Anti-Cheat showcases an advanced understanding of **Low-level Windows Internals**, **Security Architecture**, and **Network Programming**. By successfully implementing memory-level API hooking, custom cryptographic file streams, real-time client patching, and a hybrid TCP/UDP server architecture, this project not only neutralizes sophisticated game exploitation but also significantly enhances the underlying capabilities of a legacy game engine.
+
+## ⚠️ License, Usage Terms & Copyrights
+
+This project is open-sourced to share knowledge and improve the security standards within the development community. By accessing or using this source code, you agree to the following strict terms:
+
+1. **Personal & Educational Use Only:** You are free to study, modify, and use this code for your own personal learning or non-commercial private server projects.
+2. **Strictly NO Commercial Use:** Selling this source code, any modified versions of it, or compiled binaries derived from this repository is **STRICTLY PROHIBITED**.
+3. **No Plagiarism:** You may not claim this architecture or source code as your own work. 
+
+## 🤝 Support, Community & Binary Releases
+
+I am highly supportive of developers who genuinely want to learn about low-level C++, memory management, and anti-cheat architecture. 
+
+* **Need help understanding the code?** Feel free to reach out to me on Discord: `ashe3a`
+* **⚠️ Notice for Copy-Pasters:** This repository is a resource for learning. If you are looking for a zero-effort, plug-and-play solution and refuse to read or understand the code, please do not request support.
+* **Future Updates:** If the project gathers enough support and community interest, I will begin providing ready-to-use compiled `.exe` / `.dll` binaries alongside the source code in the [Releases](#) tab for easier integration.
