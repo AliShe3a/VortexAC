@@ -15,7 +15,7 @@ DatabaseManager::~DatabaseManager() {
 }
 
 /**
- * @brief معالجة وإظهار أخطاء SQL بشكل تفصيلي (Native C++)
+ * @brief معالجة وإظهار أخطاء SQL بشكل تفصيلي
  */
 void DatabaseManager::ReportError(SQLSMALLINT handleType, SQLHANDLE handle) {
     SQLCHAR sqlState[6];
@@ -36,11 +36,10 @@ void DatabaseManager::ReportError(SQLSMALLINT handleType, SQLHANDLE handle) {
 bool DatabaseManager::Connect() {
     std::lock_guard<std::mutex> lock(dbMutex);
 
-    // 1. تخصيص البيئة (Environment)
     if (SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv) != SQL_SUCCESS) return false;
     SQLSetEnvAttr(hEnv, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0);
 
-    const char* ipAddress = "103.78.0.191";
+    const char* ipAddress = "127.0.0.1";
     int port = 1433;
     const char* username = "anticheat";
     const char* password = "PassworkAnti5234bX";
